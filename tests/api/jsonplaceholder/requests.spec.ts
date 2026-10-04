@@ -1,18 +1,15 @@
 import { test, expect, request } from '@playwright/test';
+import { credentials, statusCodes } from '../../../test-data/api-testdata';
 
- const statusCodes = {
-    ok: 200,
-    notFound: 404,
-    serverError: 500,
-    resourceCreated: 201,
+  const requestData = {
+    title: 'API testing using Playwright',
+    body: 'Learning API testing concepts using Playwright, currently learning POST request',
+    userId: credentials.userIdJsonPlaceholder
   }
-
-  const baseUrl = 'https://jsonplaceholder.typicode.com';
-  const userId = 1;
-
+  
 test('GET returns successful response', async ({ request }) => {
   const response = await request.get(
-    `${baseUrl}/users/${userId}`
+    `${credentials.baseUrlJsonPlaceholder}/users/${credentials.userIdJsonPlaceholder}`
   );
 
   // verify response code status
@@ -20,44 +17,39 @@ test('GET returns successful response', async ({ request }) => {
 
   
   // verify response body parameters
-  const body = await response.json();
+  const responseBody = await response.json();
 
-  expect(body.id).toBe(1);
-  expect(body.name).toBe('Leanne Graham');
-  expect(body.username).toBe('Bret');
+  expect(responseBody.id).toBe(1);
+  expect(responseBody.name).toBe('Leanne Graham');
+  expect(responseBody.username).toBe('Bret');
   
   });
 
 test('GET returns 404 for non-existing user', async ({ request }) => {
   const response = await request.get(
-    `${baseUrl}/users/99999`
+    `${credentials.baseUrlJsonPlaceholder}/users/99999`
   );
 
   expect(response.status()).toBe(statusCodes.notFound);
-  const body = await response.json();
-  expect(body).toEqual({});
+  const responseBody = await response.json();
+  expect(responseBody).toEqual({});
 });
 
 test('GET returns 404 for invalid endpoint', async ({ request }) => {
   const response = await request.get(
-    `${baseUrl}/invalid-endpoint`
+    `${credentials.baseUrlJsonPlaceholder}/invalid-endpoint`
   );
 
   expect(response.status()).toBe(statusCodes.notFound);
-  const body = await response.json();
-  expect(body).toEqual({});
+  const responseBody = await response.json();
+  expect(responseBody).toEqual({});
 });
 
-// create request object for sending POST reqest
 test('POST creates a new post', async ({ request }) => {
   const response = await request.post(
-    `${baseUrl}/posts`,
+    `${credentials.baseUrlJsonPlaceholder}/posts`,
     {
-      data: {
-        title: 'API testing using Playwright',
-        body: 'Learning API testing concepts using Playwright, currently learning POST request',
-        userId: 1,
-      },
+      data: requestData
     }
   );
 
@@ -65,51 +57,51 @@ test('POST creates a new post', async ({ request }) => {
   expect(response.status()).toBe(statusCodes.resourceCreated);
 
   // expect response data to equal request data from above
-  const response_data = await response.json();
-  expect(response_data.title).toBe('API testing using Playwright');
-  expect(response_data.body).toBe(
+  const responseData = await response.json();
+  expect(responseData.title).toBe('API testing using Playwright');
+  expect(responseData.body).toBe(
     'Learning API testing concepts using Playwright, currently learning POST request'
   );
-  expect(response_data.userId).toBe(1);
+  expect(responseData.userId).toBe(1);
   
   //verify server created unique ID for the resource
-  expect(response_data.id).toBeDefined();
+  expect(responseData.id).toBeDefined();
   
 });
 
 // Update resource object using PUT request
 test('PUT updates an existing post', async ({ request }) => {
   const response = await request.put(
-    `${baseUrl}/posts/${userId}`,
+    `${credentials.baseUrlJsonPlaceholder}/posts/${credentials.userIdJsonPlaceholder}`,
     {
       data: {
         id: 1,
         title: 'API testing using Playwright',
         body: 'Learning API testing concepts using Playwright, currently learning PUT request',
-        userId: 1,
+        userId: credentials.userIdJsonPlaceholder,
       },
     }
   );
 
   expect(response.status()).toBe(statusCodes.ok);
 
-  const response_data = await response.json();
+  const responseData = await response.json();
 
-  expect(response_data.title).toBe('API testing using Playwright');
-  expect(response_data.body).toBe(
+  expect(responseData.title).toBe('API testing using Playwright');
+  expect(responseData.body).toBe(
     'Learning API testing concepts using Playwright, currently learning PUT request'
   );
-  expect(response_data.userId).toBe(1);
+  expect(responseData.userId).toBe(credentials.userIdJsonPlaceholder);
   
   //verify server created unique ID for the resource
-  expect(response_data.id).toBe(1);
+  expect(responseData.id).toBe(1);
 
 });
 
 
 test('PATCH updates an existing post', async ({ request }) => {
   const response = await request.patch(
-    `${baseUrl}/posts//${userId}`,
+    `${credentials.baseUrlJsonPlaceholder}/posts//${credentials.userIdJsonPlaceholder}`,
     {
       data: {
         title: 'API testing using Playwright - Updated',
@@ -119,15 +111,15 @@ test('PATCH updates an existing post', async ({ request }) => {
 
   expect(response.status()).toBe(statusCodes.ok);
 
-  const response_data = await response.json();
+  const responseData = await response.json();
 
-  expect(response_data.title).toBe('API testing using Playwright - Updated');
+  expect(responseData.title).toBe('API testing using Playwright - Updated');
 
 });
 
 test('DELETE removes existing post', async ({ request })=> {
   const response = await request.delete(
-    `${baseUrl}/posts//${userId}`,
+    `${credentials.baseUrlJsonPlaceholder}/posts//${credentials.userIdJsonPlaceholder}`,
   )
 
   expect(response.status()).toBe(statusCodes.ok);
@@ -136,13 +128,13 @@ test('DELETE removes existing post', async ({ request })=> {
 
 test('GET user by ID', async ({ request }) => {
   const response = await request.get(
-    `${baseUrl}/users/${userId}`
+    `${credentials.baseUrlJsonPlaceholder}/users/${credentials.userIdJsonPlaceholder}`
   )
 
   expect(response.status()).toBe(statusCodes.ok);
 
-  const response_body = await response.json();
+  const responseBody = await response.json();
 
-  expect(response_body.id).toBe(userId);
+  expect(responseBody.id).toBe(credentials.userIdJsonPlaceholder);
 
 });

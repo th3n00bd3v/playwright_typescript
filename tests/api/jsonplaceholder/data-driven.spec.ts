@@ -1,25 +1,36 @@
 import { test, expect } from '@playwright/test';
+import { credentials, statusCodes } from '../../../test-data/api-testdata';
 
-const baseUrl = 'https://jsonplaceholder.typicode.com';
 const userIds = [1, 2, 3];
-
-const statusCodes = {
-    ok: 200,
-    notFound: 404,
-    serverError: 500,
-    resourceCreated: 201,
-  }
 
 for (const userId of userIds) {
   test(`GET user by ID - ${userId}`, async ({ request }) => {
     const response = await request.get(
-        `${baseUrl}/users/${userId}`
+        `${credentials.baseUrlJsonPlaceholder}/users/${userId}`
     )
 
     expect(response.status()).toBe(statusCodes.ok);
 
-    const response_body = await response.json();
-    expect(response_body.id).toBe(userId);
+    const responseBody = await response.json();
+    expect(responseBody.id).toBe(userId);
 
   });
+
+  test(`GET posts filtered by userId - ${userId}`, async ({ request }) => {
+    const response = await request.get(
+        `${credentials.baseUrlJsonPlaceholder}/posts`, { params: { userId, _limit: 5 } }
+    )
+    
+    expect(response.status()).toBe(statusCodes.ok);
+
+    const responseBody = await response.json();
+    expect(responseBody).toBeInstanceOf(Array);
+    expect(responseBody).toHaveLength(5);
+
+    for (const post of responseBody) {
+      expect(post.userId).toBe(userId);
+    }
+    
+  });
+
 }

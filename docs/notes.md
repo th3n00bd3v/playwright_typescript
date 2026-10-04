@@ -25,4 +25,19 @@
 
 Reusable setup for referencing repeatable behaviour
 
-> Last updated: v0 - 27-09-2026
+
+### Authorization
+
+User logs in
+    ↓
+Authentication
+    ↓
+Server gives access token
+    ↓
+User requests /orders
+    ↓
+Authorization checks token/permissions
+    ↓
+Access allowed or denied
+
+> Last updated: v0 - 02-10-2026
