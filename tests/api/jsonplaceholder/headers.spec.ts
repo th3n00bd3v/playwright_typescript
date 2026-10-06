@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { credentials, statusCodes } from '../../../test-data/api-testdata';
+import { credentials, statusCodes } from '../../../test-artifacts/test-data/api-testdata';
 
 test('POST request with header', async ({ request }) => {
 

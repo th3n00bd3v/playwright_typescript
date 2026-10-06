@@ -1,5 +1,5 @@
 import { expect } from '@playwright/test';
-import { test } from '../fixtures/saucedemo.fixture';
+import { test } from '../../../test-artifacts/fixtures/saucedemo.fixture';
 
 test('Add backpack to cart', async ({ loginPage }) => {
   const backpack = loginPage

@@ -1,5 +1,5 @@
 import { expect } from '@playwright/test';
-import { credentials, test, statusCodes } from '../fixtures/dummyjson.fixture';
+import { credentials, test, statusCodes } from '../../../test-artifacts/fixtures/dummyjson.fixture';
 
 test('Access authenticated user', async ({ request, accessToken }) => {
     const userResponse = await request.get(
